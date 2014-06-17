@@ -5,6 +5,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
@@ -41,8 +42,9 @@ public class UbMrgJoinJob extends Configured implements Tool
     UbMrgMergeInputFormat.setJoiningPath(job, input2Path, "/tmp/joiningStats.txt");
     
     // Define output format and path
-    job.setOutputFormatClass(TextOutputFormat.class);
-    TextOutputFormat.setOutputPath(job, new Path(outputPath));
+    job.setOutputFormatClass(SequenceFileOutputFormat.class);
+    SequenceFileOutputFormat.setOutputPath(job, new Path(outputPath));
+    SequenceFileOutputFormat.setOutputCompressorClass(job, SnappyCodec.class);
 
     // Define the mapper and reducer
     job.setMapperClass(UbMrgJoinMapper.class);

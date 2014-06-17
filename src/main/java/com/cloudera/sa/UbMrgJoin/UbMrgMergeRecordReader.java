@@ -83,7 +83,7 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 	public ArrayList<String> getNextJoinKeyList(long coreKey) throws IOException {
 	  
 	  if (lastSuccessJoinKey == coreKey) {
-	    System.out.println("getNextJoin.1" + lastSuccessJoinKey);
+	    //System.out.println("getNextJoin.1" + lastSuccessJoinKey);
 			return joinValues;
 		} else {
 		  joinValues.clear();
@@ -93,7 +93,7 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 		
 		//first time
 		if (currentJoinFile == null) {
-		  System.out.println("getNextJoin.2 null");
+		  //System.out.println("getNextJoin.2 null");
 			changedCurrentJoinFile = true;
 			currentJoinFile = sortedJoinedFiles.next();
 			nextJoinFile = sortedJoinedFiles.next();
@@ -101,15 +101,15 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 		
 		//Make sure the next file has a great id
 		while (nextJoinFile != null && coreKey >= nextJoinFile.getKey()) {
-		  System.out.println("getNextJoin.3 " + nextJoinFile.getKey());
+		  //System.out.println("getNextJoin.3 " + nextJoinFile.getKey());
 			if (!sortedJoinedFiles.hasNext()) {
-			  System.out.println("getNextJoin.4 " + null);
+			  //System.out.println("getNextJoin.4 " + null);
 				changedCurrentJoinFile = true;
 				currentJoinFile = nextJoinFile;
 				nextJoinFile = null;
 				break;
 			}
-			System.out.println("getNextJoin.5 " + null);
+			//System.out.println("getNextJoin.5 " + null);
 			changedCurrentJoinFile = true;
 			currentJoinFile = nextJoinFile;
 			nextJoinFile = sortedJoinedFiles.next();
@@ -120,14 +120,14 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 		  if (joinReader != null) {
 		    joinReader.close();
 		  }
-		  System.out.println("getNextJoin.6 " + currentJoinFile.getValue());
+		  //System.out.println("getNextJoin.6 " + currentJoinFile.getValue());
 			Option fileOption = SequenceFile.Reader.file(currentJoinFile.getValue());
 			joinReader = new SequenceFile.Reader(context.getConfiguration(), fileOption);
 		}
 		
 		while (joiningKey.get() < coreKey ) {
 		  
-		  System.out.println("getNextJoin.7 " + joiningKey.get());
+		  //System.out.println("getNextJoin.7 " + joiningKey.get());
 		  
 			if (!joinReader.next(joiningKey, joinValue)) {
 				return null;
@@ -135,21 +135,21 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 		}
 		
 		if (joiningKey.get() == coreKey) {
-		  System.out.println("getNextJoin.8 " + joiningKey.get());
+		  //System.out.println("getNextJoin.8 " + joiningKey.get());
 			lastSuccessJoinKey = coreKey;
 			joinValues.add(joinValue.toString());
 			while (joiningKey.get() == coreKey) {
 				if (!joinReader.next(joiningKey, joinValue)) {
-				  System.out.println("getNextJoin.9 " + null);
+				  //System.out.println("getNextJoin.9 " + null);
 					break;
 				} else {
-				  System.out.println("getNextJoin.10 " + joinValue.toString());
+				  //System.out.println("getNextJoin.10 " + joinValue.toString());
 					joinValues.add(joinValue.toString());		
 				}
 			}
 			return joinValues;
 		}
-		System.out.println("getNextJoin.X " + null);
+		//System.out.println("getNextJoin.X " + null);
 		return null;
 		
 	}
@@ -158,7 +158,7 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 	public boolean nextKeyValue() throws IOException, InterruptedException {
 		
 		if (currentJoinValues != null && currentJoinValues.size() -1 > currentJoinValuesIndex) {
-		  System.out.println("coreByPass: " + currentJoinValuesIndex);
+		  //System.out.println("coreByPass: " + currentJoinValuesIndex);
 			value.set(sequenceFileRecordReader.getCurrentValue().toString() + "|" + currentJoinValues.get(currentJoinValuesIndex++));
 			return true;
 		}
@@ -169,14 +169,14 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 		long keyLong = sequenceFileRecordReader.getCurrentKey().get();
 		mainKey.set(keyLong);
 		
-		System.out.println("coreRead: " + keyLong);
+		//System.out.println("coreRead: " + keyLong);
 		
 		if ((currentJoinValues = getNextJoinKeyList(keyLong)) != null ) {
 			currentJoinValuesIndex = 0;
 			value.set(sequenceFileRecordReader.getCurrentValue().toString() + "|" + currentJoinValues.get(currentJoinValuesIndex++));
 			return true;
 		}
-		System.out.println("no match: ");
+		//System.out.println("no match: ");
 		return false;
 	}
 
