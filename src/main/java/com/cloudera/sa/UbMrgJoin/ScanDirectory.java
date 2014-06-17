@@ -19,7 +19,7 @@ import org.apache.hadoop.io.SequenceFile.Reader.Option;
 public class ScanDirectory {
   
   public static BufferedWriter writer;
-  public static ExecutorService executorService = Executors.newFixedThreadPool(20);
+  public static ExecutorService executorService = Executors.newFixedThreadPool(32);
   
 	public static void main(String[] args) throws IOException, InterruptedException {
 		if (args.length == 0) {
@@ -82,9 +82,14 @@ public class ScanDirectory {
     reader.close();
   }
 	
+  static long counter = 0;
+  
 	public synchronized static void writeSeqMetaData(String line) throws IOException {
 	  writer.append(line);
 	  writer.newLine();
+	  if (counter % 100 == 0) {
+	    System.out.println("Indexed " + counter + " files.");
+	  }
 	}
 	
 	public static class ReadSeqFileHead implements Runnable {

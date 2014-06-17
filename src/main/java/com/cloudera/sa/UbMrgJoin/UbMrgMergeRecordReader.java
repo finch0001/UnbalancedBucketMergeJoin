@@ -197,6 +197,9 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 	@Override
 	public void close() throws IOException {
 		sequenceFileRecordReader.close();
+		if (joinReader != null) {
+      joinReader.close();
+    }
 	}
 	
 
