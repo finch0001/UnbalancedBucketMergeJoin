@@ -21,7 +21,7 @@ public class Main {
 			ScanDirectory.main(subCmd);
 		} else if (command.equals("DataGenerator")) {
 		  DataGenerator.main(subCmd);
-		} else if (command.equals("UnkJoinJob")) {
+		} else if (command.equals("UbMrgJoinJob")) {
 		  UbMrgJoinJob.main(subCmd);
 		} else {
 		  System.out.println("not a function: " + command);

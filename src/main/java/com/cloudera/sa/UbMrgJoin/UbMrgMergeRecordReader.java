@@ -163,18 +163,17 @@ public class UbMrgMergeRecordReader extends RecordReader<LongWritable, Text> {
 			return true;
 		}
 		
-		if (!sequenceFileRecordReader.nextKeyValue()) {
-			return false;
-		}
-		long keyLong = sequenceFileRecordReader.getCurrentKey().get();
-		mainKey.set(keyLong);
+		while (sequenceFileRecordReader.nextKeyValue()) {
+			
+		  long keyLong = sequenceFileRecordReader.getCurrentKey().get();
+		  mainKey.set(keyLong);
 		
-		//System.out.println("coreRead: " + keyLong);
-		
-		if ((currentJoinValues = getNextJoinKeyList(keyLong)) != null ) {
-			currentJoinValuesIndex = 0;
-			value.set(sequenceFileRecordReader.getCurrentValue().toString() + "|" + currentJoinValues.get(currentJoinValuesIndex++));
-			return true;
+  		//System.out.println("coreRead: " + keyLong);
+  		if ((currentJoinValues = getNextJoinKeyList(keyLong)) != null ) {
+  			currentJoinValuesIndex = 0;
+  			value.set(sequenceFileRecordReader.getCurrentValue().toString() + "|" + currentJoinValues.get(currentJoinValuesIndex++));
+  			return true;
+  		}
 		}
 		//System.out.println("no match: ");
 		return false;

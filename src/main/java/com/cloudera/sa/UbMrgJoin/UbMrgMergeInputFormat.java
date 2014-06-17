@@ -25,7 +25,7 @@ public class UbMrgMergeInputFormat extends FileInputFormat<LongWritable, Text>{
 		return new UbMrgMergeRecordReader(context, context.getConfiguration().get(JOINING_STATS_OUTPUT_PATH));
 	}
 
-	public static void setJoiningPath(Job job, String joiningPath, String joiningStatsOutputPath) throws IOException {
+	public static void setJoiningPath(Job job, String joiningPath, String joiningStatsOutputPath) throws IOException, InterruptedException {
 		job.getConfiguration().set(JOINING_PATH, joiningPath);
 		job.getConfiguration().set(JOINING_STATS_OUTPUT_PATH, joiningStatsOutputPath);
 		
